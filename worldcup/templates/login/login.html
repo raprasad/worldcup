@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block page_title %}MCB World Cup - Log in page{% endblock  %}
+
+{% block additional_header_info %}
+<script language="javascript"  src="{{MEDIA_URL}}/scripts/jq_email_links.js" type="text/javascript"></script>
+<script language="javascript1.1" type="text/javascript">
+<!--
+$(document).ready(function(){
+        format_mail_links();           
+});
+//-->
+</script>
+
+{% endblock %}
+
+{% block main_content %}
+<div>
+    <div style="float:left;">
+				<div class="action_title2">Login</div>
+
+	{% if  just_logged_out  %}
+		<div class="gb">You have successfully logged out.
+		                {% include "timestamp.html" %}
+        </div>
+	{% endif %}
+
+	{% if  login_success  %}
+		<div class="gb">Success! You are logged in.</b>
+		
+		                {% include "timestamp.html" %}
+        </div>
+		
+	{% endif %}
+
+	{% if already_logged_in  %}
+		<div class="gb">You are already logged in as <b>{{logged_in_user.get_full_name}}</b>
+		    &nbsp; &nbsp; (<a href="{% url search_committee_logout %}" class="lnk">log out</a>)
+		                    {% include "timestamp.html" %}
+
+		    </div>
+		
+	{% endif %}
+
+
+	{% if ERR_LOGIN %}
+			<div class="err_box">
+			    Sorry!  There was a login error.
+			    
+			    <br /><br />
+			    {% if ERR_request_or_login_missing %}Missing login information. Please contact the administrator. {% endif %}
+
+			    {% if ERR_domain_does_not_exist %}The domain does not exist. Please contact the administrator. {% endif %}
+
+			    {% if ERR_username_pw_incorrect %}The username and password were incorrect.  Please try again. {% endif %}
+
+			    {% if ERR_account_not_active %}You account is marked as "inactive." Please contact the administrator. {% endif %}
+
+			    {% if ERR_not_lab_user %}The instrumentation is only available to lab users. Please contact the administrator. {% endif %}
+	
+                {% if ERR_missing_username_or_pw %}Please fill in in the username and password.{% endif %}		
+                
+                {% include "timestamp.html" %}
+                
+
+			</div>
+	{% endif %}
+	
+
+	
+	{# --------------------------------- #}
+	{# -- form 					 #}
+	{# --------------------------------- #}
+	{% if form and not login_success and not already_logged_in %}
+		<form method="post" action="{% url view_login %}">
+		
+			<div class="frm_border2">
+			<!-- <b>Note!</b>: For a password, use 'blank' (SSL is not yet installed)-->
+            {% for field in form %}
+                {% if field.is_hidden %}{{ field }}{% endif %}
+            {% endfor %}
+			<table border="0" cellpadding="10" id="login" style="border:none;">
+            {% for field in form %}
+                {% ifequal field.name 'next' %}
+                    {% if not field.is_hidden %}{{ field }}{% endif %}
+                {% else %}
+                 
+                <tr>
+                    <td style="border:none;">{{ field.label }}</td>
+            
+                    <td style="border:none;">{{ field }}
+                    {% if field.errors %}
+                        <span class="form_err">
+                        {% for err in field.errors %}
+                            {% if forloop.first %}{%else%}<br />{% endif %}
+                            {{ err }}
+                        {% endfor %}</span>
+                   {% endif %}
+                    </td>
+                </tr>
+               
+                {% endifequal %}
+            {% endfor %}
+                <tr><td colspan="2" align="right"  style="border:none;"><input type="submit" name="submit" value="log in" /></td>
+                    <td style="border:none;">&nbsp;</td></tr>
+
+			</table>
+			
+			</div></form>
+		
+	{% endif %}
+	</div>
+	{% comment %}
+	<div style="width:200px; float:left; padding:10px;margin:50px 0px 0 20px; border:1px dotted #006699;">
+           &gt; Login with your CCB, CGR, MCB, or OEB account.
+           <br /><br />&gt; If you do not have an account, please <a href="http://www.lsdiv.harvard.edu/hu_auth/account.php" class="lnk">request one</a>. 
+
+           <br /><br />&gt; To reset your password, contact the <a href="#" rel="help/fas.harvard.edu?subject=nucleus%20active%20directory%20password%20reset" class="mlink3 lnk">help desk</a>. 
+
+           <br /><br />&gt; For more help, please read the 
+            <a href="/spinal/help/" target="_blank" class="lnk">documentation</a> or contact <a href="#" rel="rchelp/fas.harvard.edu?subject=spinal_scheduler" class="mlink3 lnk">research computing</a>. 
+
+     </div>
+     {% endcomment %}
+ 	
+     <div style="clear:both;"></div>
+
+</div>    
+ {% endblock  %}
+ 
+
+

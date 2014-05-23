@@ -1,3 +1,10 @@
+worldcup/wc_data/*
+worldcup/worldcup/db/*
+worldcup/worldcup/config/*
+worldcup/worldcup/settings*
+worldcup/worldcup/prod_settings*
+worldcup/worldcup/auth_active_directory*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

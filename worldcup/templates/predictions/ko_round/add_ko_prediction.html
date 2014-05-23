@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+
+<div id="breadcrumb">
+    <a href="{% url home_url %}">home</a>
+    &nbsp;:&nbsp; <b>Make Predictions for the {{ match_type }}</b>
+</div>
+{% endblock %}
+{% block main_content %}
+<div class="action_title2">Make Predictions for the {{ match_type }}</div>
+
+
+{% if Err_found %}
+<div class="err_box">
+    {% if MatchType_not_Found %}
+        Sorry!  The match type was not found.
+    {% endif %}
+    {% if Not_logged_in %}
+        Sorry!  You are not logged in.
+    {% endif %}
+    
+    {% if Too_late_to_predict %}
+        Sorry!  The deadline has passed to make predictions for
+        the <b>{{ match_type }}</b>
+    {% endif %}
+   <p><a href="{% url home_url %}">return home</a></p>
+</div>
+{% endif %}
+
+<div class="info_box">Listed below are the 16 knockout stage matches.
+    For each match, please enter:
+    <ul>
+        <li>The teams in the match.  As the group stage standings are announced, the possible choices will be narrowed down.</li>
+        <li>The winner of the match: "Team 1 Advances" or "Team 2 Advances",
+            <br />(see points table below, e.g. 8 points for picking Semi Final winner)<li>
+        <li>The actual goals scored by each team in regular time and overtime.  
+            <br /><b>Note:</b> This does not include goals scored in a shootout.
+            <br />(see points table below, e.g. 8 points for picking Semi Final score)
+        <ul>
+            <li>Round of 16: 2 points</li>
+            <li>Quarter Finals: 4 points</li>
+            <li>Semi Finals: 8 points</li>
+            <li>3rd/4th Place: 8 points</li>
+            <li>Final: 16 points</li>
+        </ul></li>
+    </ul>
+    
+    <!-- <p>One point will be rewarded for each correct choice, giving 96 possible points.</p> -->
+    <p>Your predictions do not have to be consistent for a match.</p>
+    <p>Your prediction will be scored shortly after the game is completed.</p>
+    
+    <p><b>You may save/edit your predictions up to {{ match_type.last_day_to_predict|date:"F jS, Y f:s a" }}</b></p>
+    
+
+</div>
+
+
+
+{% if not Err_found %}
+
+{% include "predictions/ko_round/match_ko_formset.html" %}
+{% endif %}
+
+{% endblock %}

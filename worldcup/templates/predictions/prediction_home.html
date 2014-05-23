@@ -1,0 +1,76 @@
+
+{% extends "base.html" %}
+{% load humanize %} 
+
+
+
+
+{% block breadcrumb %}
+<div id="breadcrumb">
+    <a href="{% url home_url %}">home</a>
+</div>
+{% endblock %}
+
+{% block main_content %}
+
+<div class="action_title2">World Cup Predictions</div>
+
+{% ifequal num_matches_played 64 %}
+<div style="width:400px; border:2px solid #982009; line-height:170%; padding:10px; background-color:#cd4c13; margin: 20px 0;font-size:18px;color:#fff;">
+Final Standings after {{ num_matches_played }} Matches!
+</div>
+{% endifequal %}
+
+{%if not match_types %}
+Sorry, no match types found
+{% endif %}
+{% ifnotequal num_matches_played 64 %}
+        <div class="info_box2">
+            <p>Please make your World Cup predictions:</p>
+            <ul>
+            {% for mt in match_types %}
+                {% ifequal mt.name 'Group Stage' %}
+                    <li><a href="{% url view_prediction_form mt.slug %}">{{ mt }}</a><li>
+                {% else %}
+                    <li><a href="{% url view_ko_prediction_form mt.slug %}">{{ mt }}</a></li>
+                {% endifequal %}
+            {% endfor %}
+            </ul>
+        </div>
+{% endifnotequal %}
+        &nbsp;
+
+        <div class="gb">
+            <b>Some counts:</b>
+            <p>Number of Users: <b>{{ number_users|intcomma }}</b></p>
+            <p>Number of Predictions: <b>{{ number_predictions|intcomma }}</b></p>
+        </div>
+        
+    <br /<br />
+<div id="id_standings">
+    <table cellpadding="0" cellspacing="0">
+         <tr>
+             <th colspan="5">Points after {{ num_matches_played }} game{{ num_matches_played|pluralize }}</th>
+        </tr>
+        <tr>
+            <th>&nbsp;</th>
+            
+            <th>username</th>
+            <th>last name</th>
+            <th>first name</th>
+            <th>total points</th>
+        </tr>
+        
+    {% for s in standings %}
+        <tr{% ifequal s.user user %} style="background-color:#fdf48b;"{% endifequal %}>
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url view_user_predictions s.user.id %}">{{ s.user.username  }}</a></td>
+            <td>{{ s.user.last_name }}</td>
+            <td>{{ s.user.first_name }}</td>
+            <td>{% if s.total_points %}{{ s.total_points }}{% else %}0{% endif %}</td>
+        </tr>
+        
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

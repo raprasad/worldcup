@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+
+<div id="breadcrumb">
+    <a href="{% url home_url %}">home</a>
+    &nbsp;:&nbsp; <b>Make Predictions for the {{ match_type }}</b>
+</div>
+{% endblock %}
+{% block main_content %}
+<div class="action_title2">Make Predictions for the {{ match_type }}</div>
+
+<div class="gb">Your predictions have been saved!
+    <ul>
+        <li><a href="{% url view_prediction_form match_type.slug %}">Edit your predictions</a></li>
+        <li><a href="{% url home_url %}">Return to the Home Page</a></li>
+</div>
+
+{% if Err_found %}
+    {% if MatchType_not_Found %}
+        Sorry!  The match type was not found.
+    {% endif %}
+    {% if Not_logged_in %}
+        Sorry!  You are not logged in.
+    {% endif %}
+    <a href="{% url view_prediction_list %}">return to list</a>
+{% endif %}
+
+{% if predictions %}
+
+    {% include "predictions/your_predictions_table.html" %}
+{% endif %}
+
+{% endblock %}

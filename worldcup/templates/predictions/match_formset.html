@@ -1,0 +1,85 @@
+{% if formset %}
+
+<form action="{% url view_prediction_form match_type.slug %}" method="post">
+    {{ formset.management_form }}
+    {{ formset.non_form_errors.as_ul }}
+<div id="id_prediction_entry_table">
+<table cellpadding="0" cellspacing="0">
+    {#{ pform.as_table }#}
+    <tr>
+        <td colspan="1"><input type="submit" value="Save"></td>        
+        <td colspan="8">You may save/edit your predictions up to the day before the first match</td>        
+    </tr>
+
+    <tr>
+        <th>&nbsp;</th>
+        <th>Date/Time</th>
+        <th>Group</th>
+        <th>Team 1</th>
+        <th>&nbsp;</th>
+        <th>Team 2</th>
+        <th class="td_txtc">Choose Winner or Draw</td>
+        <th>Team 1 Score</th>
+        <th>Team 2 Score</th>
+    </tr>
+
+{% for pform in formset.forms %}
+
+
+{% comment %}
+
+{% if pform.errors %}
+    <tr>
+        <td colspan="7">
+    {% if pform.errors %}
+        {% for error in pform.errors.values %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+        </td>
+    </tr>
+{% endif %}
+{% endcomment %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ pform.instance.match.match_time|date:"n/j \@ g:i a" }}</td>
+        <td>{{ pform.instance.match.team1.group }}</td>
+        <td>{{ pform.instance.match.team1 }}</td>
+        <td class="td_txtc">vs.</td>
+        <td>{{ pform.instance.match.team2 }}
+            {% for f in pform %}
+                {% if f.is_hidden %}{{ f }}{% endif %}
+            {% endfor %}
+            </td>
+
+            {% for f in pform %}
+                {% if not f.is_hidden %}
+                <td>
+                    {% ifequal f.name "win_draw_choices" %}<div class="class_win_draw_choices">{% endifequal %}
+                    {% ifequal f.name "team1_score" %}<div class="score_entry">{% endifequal %}
+                    {% ifequal f.name "team2_score" %}<div class="score_entry">{% endifequal %}
+                        {{ f }}
+                        {% include "predictions/match_form_errs.html" %}
+
+                    {% ifequal f.name "win_draw_choices" %}</div>{% endifequal %}
+                    {% ifequal f.name "team1_score" %}</div>{% endifequal %}
+                    {% ifequal f.name "team2_score" %}</div>{% endifequal %}
+                </td>
+                
+                
+                {% endif %}
+            {% endfor %}
+    </tr>
+    
+
+{% endfor %}
+        <tr>
+            <td colspan="1"><input type="submit" value="Save"></td>        
+            <td colspan="8">You may save/edit your predictions up to the day before the first match</td>        
+        </tr>
+
+
+</table>
+</div>
+</form>
+{% endif %}

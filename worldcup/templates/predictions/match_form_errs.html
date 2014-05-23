@@ -1,0 +1,7 @@
+{% if f.errors %}
+    <span class="form_err">
+        {% for err in f.errors %}
+            <br />{{ err }}
+        {% endfor %}
+    </span>
+{% endif %}

@@ -1,0 +1,79 @@
+{% if predictions %}
+<div style="padding:5px;"></div>
+
+<div id="id_prediction_entry_table">
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <th>&nbsp;</th>
+        <th>Date/Time</th>
+        <th>Group</th>
+        <th>Team 1</th>
+        <th>&nbsp;</th>
+        <th>Team 2</th>
+        <th>Predicted Winner</th>
+        <th>Actual Winner</th>
+        <th>Match<br />Prediction<br />Points</th>
+        <th>Predicted Score</th>
+        <th>Actual Score</th>
+        <th>Score<br />Prediction<br />Points</th>
+        <th>Points<br />for<br />Match</th>
+    </tr>
+    {% for p in predictions %}
+
+    <tr {% if p.match.score_recorded %}style="background-color:#edf3fe;"{% endif %}>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ p.match.match_time|date:"n/j \@ g:i a" }}
+                {% if p.match.score_recorded %}<br />(match played){% endif %}</td>
+        <td>{{ p.match.team1.group }}</td>
+        <td>{{ p.match.team1 }}</td>
+        <td class="td_txtc">vs.</td>
+        <td>{{ p.match.team2 }}</td>
+        <td class="td_txtc">{% if p.team1_wins %}{{ p.match.team1 }}{% endif %}
+                            {% if p.is_draw %}Draw{% endif %}
+                            {% if p.team2_wins %}{{ p.match.team2 }}{% endif %}
+                            {% if p.team1_wins or p.is_draw or p.team2_wins %}
+                            {% else %}
+                                (no prediction made)
+                            {% endif %}
+        </td>
+        {% if p.match.score_recorded %}
+            <td class="td_txtc">
+                                    {% if p.match.did_team1_win %}{{ p.match.team1 }}{% endif %}
+                                    {% if p.match.did_team2_win %}{{ p.match.team2 }}{% endif %}
+                                    {% if p.match.is_draw %}Draw{% endif %}
+            </td>
+            <td  class="td_txtr">{% ifnotequal p.points_win_loss_draw 0 %}
+                                        <span class="winning_point">--&gt; {{ p.points_win_loss_draw }}</span>
+                                {% else %}
+                                        <b>{{ p.points_win_loss_draw }}</b>
+                                {% endifnotequal %}</td>
+        {% else %}
+            <td colspan="2" class="td_txtc">(match not yet played)</td>
+        {% endif %}
+        <td class="td_txtc">{{ p.team1_score }} - {{ p.team2_score }}</td>
+
+        {% if p.match.score_recorded %}
+            <td class="td_txtc">{{ p.match.team1_final_score }} - {{ p.match.team2_final_score }}</td>
+            <td  class="td_txtr">{% ifnotequal p.points_scoring 0 %}
+                                        <span class="winning_point">--&gt; {{ p.points_scoring }}</span>
+                                {% else %}
+                                        <b>{{ p.points_scoring }}</b>
+                                {% endifnotequal %}</td>
+            <td  class="td_txtr">                    {% ifnotequal p.points_final 0 %}
+                                                            <span class="winning_point">--&gt; {{ p.points_final }}</span>
+                                                    {% else %}
+                                                            <b>{{ p.points_final }}</b>
+                                                    {% endifnotequal %}</td>
+        {% else %}
+            <td colspan="3" class="td_txtc">(match not yet played)</td>
+            
+        {% endif %}
+    </tr>
+    
+    {% endfor %}
+
+
+</table>
+</div>
+</form>
+{% endif %}

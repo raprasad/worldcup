@@ -1,0 +1,117 @@
+{% if formset %}
+
+<form action="{% url view_ko_prediction_form match_type.slug %}" method="post">
+    {{ formset.management_form }}
+    {{ formset.non_form_errors.as_ul }}
+<div id="id_prediction_entry_table">
+<table cellpadding="0" cellspacing="0">
+    {#{ pform.as_table }#}
+    <tr>
+        <td colspan="1"><input type="submit" value="Save"></td>        
+        <td colspan="9">You may save/edit your predictions up to the day before the first match</td>        
+    </tr>
+
+    <tr>
+        {#<th>&nbsp;</th>#}
+        <th>Match</th>
+        <th>Date/Time</th>
+        <th>Team 1</th>
+        <th>&nbsp;</th>
+        <th>Team 2</th>
+        <th class="td_txtc">Choose Winner</td>
+        <th>Team 1 Score</th>
+        <th>Team 2 Score</th>
+    </tr>
+    <tr>
+        <td colspan="6"></td>        
+        <td colspan="2">Do not include Shootout goals</td>        
+    </tr>
+{% for pform in formset.forms %}
+
+
+{% comment %}
+
+{% if pform.errors %}
+    <tr>
+        <td colspan="7">
+    {% if pform.errors %}
+        {% for error in pform.errors.values %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+        </td>
+    </tr>
+{% endif %}
+{% endcomment %}
+{% ifequal pform.instance.match.id 49 %}
+   <tr>
+       <td colspan="8" style="background-color:#9cd2e5;text-align:left;padding:5px 20px;font-weight:bold; color:#000;">Round of 16</td>
+   </tr>
+   {% endifequal %}
+    <tr>
+      {#  <td>{{ forloop.counter }}</td>#}
+        <td>{{ pform.instance.match.name }}
+            {% if pform.instance.match.note %}
+                <br /><i>({{ pform.instance.match.note }})</i>
+            {% endif %}
+            </td>   
+        <td>{{ pform.instance.match.match_time|date:"n/j \@ g:i a" }}
+            {# hidden form attributes dumped here #}
+             {% for f in pform %}
+                    {% if f.is_hidden %}{{ f }}{% endif %}
+                {% endfor %}
+        </td>
+
+
+            {% for f in pform %}
+                {% if not f.is_hidden %}
+                
+                {% ifequal f.name "team2" %}<td class="td_txtc">vs.</td>{% endifequal %}
+
+                <td>
+                    {% ifequal f.name "win_draw_choices" %}<div class="class_win_draw_choices">{% endifequal %}
+                    {% ifequal f.name "team1_score" %}<div class="score_entry">{% endifequal %}
+                    {% ifequal f.name "team2_score" %}<div class="score_entry">{% endifequal %}
+                        {{ f }}
+                        {% include "predictions/match_form_errs.html" %}
+
+                    {% ifequal f.name "win_draw_choices" %}</div>{% endifequal %}
+                    {% ifequal f.name "team1_score" %}</div>{% endifequal %}
+                    {% ifequal f.name "team2_score" %}</div>{% endifequal %}
+                </td>
+                
+                
+                {% endif %}
+            {% endfor %}
+    </tr>
+    {% ifequal pform.instance.match.id 56 %}
+    <tr>
+        <td colspan="8" style="background-color:#9cd2e5;text-align:left;padding:5px 20px;font-weight:bold; color:#000;">Quarter Finals</td>
+    </tr>
+    {% endifequal %}
+    {% ifequal pform.instance.match.id 60 %}
+    <tr>
+        <td colspan="8" style="background-color:#9cd2e5;text-align:left;padding:5px 20px;font-weight:bold; color:#000;">Semi Finals</td>
+    </tr>
+    {% endifequal %}
+    {% ifequal pform.instance.match.id 62 %}
+    <tr>
+        <td colspan="8" style="background-color:#9cd2e5;text-align:left;padding:5px 20px;font-weight:bold; color:#000;">3rd/4th Place</td>
+    </tr>
+    {% endifequal %}
+    {% ifequal pform.instance.match.id 63 %}
+    <tr>
+        <td colspan="8" style="background-color:#9cd2e5;text-align:left;padding:5px 20px;font-weight:bold; color:#000;">Finals</td>
+    </tr>
+    {% endifequal %}
+{% endfor %}
+        <tr>
+            <td colspan="1"><input type="submit" value="Save"></td>        
+            <td colspan="9">You may save/edit your predictions up to the day before the first match</td>        
+        </tr>
+
+
+</table>
+</div>
+</form>
+{% endif %}

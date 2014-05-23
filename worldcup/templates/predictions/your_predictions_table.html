@@ -1,0 +1,40 @@
+{% if predictions %}
+<div style="padding:15px;"></div>
+<div id="id_prediction_entry_table">
+<table cellpadding="0" cellspacing="0">
+    <tr>
+        <th>&nbsp;</th>
+        <th>Date/Time</th>
+        <th>Group</th>
+        <th>Team 1</th>
+        <th>&nbsp;</th>
+        <th>Team 2</th>
+        <th>Team 1 Wins</th>
+        <th>Draw</th>
+        <th>Team 2 Wins</th>
+        <th>Team 1 Score</th>
+        <th>Team 2 Score</th>
+    </tr>
+    {% for p in predictions %}
+
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ p.match.match_time|date:"n/j \@ g:i a" }}</td>
+        <td>{{ p.match.team1.group }}</td>
+        <td>{{ p.match.team1 }}</td>
+        <td class="td_txtc">vs.</td>
+        <td>{{ p.match.team2 }}</td>
+        <td class="td_txtc">{% if p.team1_wins %} X {% else %}&nbsp;{% endif %}</td>
+        <td class="td_txtc">{% if p.is_draw %} X {% else %}&nbsp;{% endif %}</td>
+        <td class="td_txtc">{% if p.team2_wins %} X {% else %}&nbsp;{% endif %}</td>
+        <td>{{ p.team1_score }}</td>
+        <td>{{ p.team2_score }}</td>
+    </tr>
+    
+    {% endfor %}
+
+
+</table>
+</div>
+</form>
+{% endif %}

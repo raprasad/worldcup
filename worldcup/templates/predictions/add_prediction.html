@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+
+<div id="breadcrumb">
+    <a href="{% url home_url %}">home</a>
+    &nbsp;:&nbsp; <b>Make Predictions for the {{ match_type }}</b>
+</div>
+{% endblock %}
+{% block main_content %}
+<div class="action_title2">Make Predictions for the {{ match_type }}</div>
+
+
+{% if Err_found %}
+<div class="err_box">
+    {% if MatchType_not_Found %}
+        Sorry!  The match type was not found.
+    {% endif %}
+    {% if Not_logged_in %}
+        Sorry!  You are not logged in.
+    {% endif %}
+    
+    {% if Too_late_to_predict %}
+        Sorry!  The deadline has passed to make predictions for
+        the <b>{{ match_type }}</b>
+    {% endif %}
+   <p><a href="{% url home_url %}">return home</a></p>
+</div>
+{% endif %}
+
+<div class="info_box">Listed below are the 48 group stage matches.
+    For each match, please enter:
+    <ul>
+        <li>The winner of the match: "Team 1 wins", "Team 2 wins", or "Draw" (1 point)
+        <li>The actual goals scored by each time. (1 point)
+    </ul>
+    
+    <p>One point will be rewarded for each correct choice, giving 96 possible points.</p>
+    <p>Your predictions do not have to be consistent for a match.  For example, for one
+        match, you may have a score of 5-1 and mark it a "Draw"</p>
+    <p>Your prediction will be scored shortly after the game is completed.</p>
+    
+    <p><b>You may save/edit your predictions up to June 10th 2010 at 23:59.</b></p>
+    
+
+</div>
+
+
+
+{% if not Err_found %}
+
+{% include "predictions/match_formset.html" %}
+{% endif %}
+
+{% endblock %}

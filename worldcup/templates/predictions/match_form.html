@@ -1,0 +1,55 @@
+{{ formset }}
+{% if pform %}
+
+{% if pform.errors %}
+    {% if pform.errors %}
+        {% for error in pform.errors.values %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+{% endif %}
+<form action="{% url view_prediction_form match_type.slug %}" method="post">
+<table cellpadding="10">
+    {#{ pform.as_table }#}
+    <tr>
+        <td>Team 1</td>
+        <td>&nbsp;</td>
+        <td>Team 2</td>
+        <td class="td_txtc">Choose Winner or Draw</td>
+        <td>Team 1 Score</td>
+        <td>Team 2 Score</td>
+    </tr>
+    {# field errors #}    
+     
+
+    {# field help #}    
+    
+    <tr>
+        <td>{{ pform.instance.match.team1 }}</td>
+        <td class="td_txtc">vs.</td>
+        <td>{{ pform.instance.match.team2 }}
+            {% for f in pform %}
+                {% if f.is_hidden %}{{ f }}{% endif %}
+            {% endfor %}
+            </td>
+
+            {% for f in pform %}
+                {% if not f.is_hidden %}
+                <td>
+                    {% ifequal f.name "win_draw_choices" %}<div class="class_win_draw_choices">{% endifequal %}
+
+                        {{ f }}
+                        {% include "predictions/match_form_errs.html" %}
+                    {% ifequal f.name "win_draw_choices" %}</div>{% endifequal %}
+                </td>
+                
+                
+                {% endif %}
+            {% endfor %}
+            <td><input type="submit" value="submit"></td>
+    </tr>
+    
+
+</table>
+</form>
+{% endif %}

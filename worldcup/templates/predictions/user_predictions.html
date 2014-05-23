@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block breadcrumb %}
+
+<div id="breadcrumb">
+    <a href="{% url home_url %}">home</a>
+    &nbsp;:&nbsp; <b>Predictions 
+            {% if user_with_predictions %}for {{ user_with_predictions.first_name }} {{ user_with_predictions.last_name }}{% endif %}</b>
+</div>
+{% endblock %}
+{% block main_content %}
+<div class="action_title2">Predictions {% if user_with_predictions %}for {{ user_with_predictions.first_name }} {{ user_with_predictions.last_name }}{% endif %}</div>
+<a name="top"></a>
+
+{% if Err_found %}
+    {% if MatchType_not_Found %}
+        Sorry!  The match type was not found.
+    {% endif %}
+    {% if Not_logged_in %}
+        Sorry!  You are not logged in.
+    {% endif %}
+    {% if User_with_predictions_not_found %}
+        Sorry!  The user was not found
+    {% endif %}
+    <p><a href="{% url home_url %}">return home</a></p>
+{% endif %}
+
+{% if predictions or ko_predictions %}
+    <div class="info_box">
+        <b>{{ user_with_predictions.first_name }} {{ user_with_predictions.last_name }}</b> has 
+       {% if points_for_user %} 
+            <b>{{ points_for_user }}</b> Point{{ points_for_user|pluralize }} 
+       {% else %}
+            <b>0</b> Points
+
+       {% endif %}
+        after <b>{{ num_matches_played }}</b> game{{ num_matches_played|pluralize }}
+
+        {% if ko_predictions %}
+        <br /><br />&gt; Go to <a href="#ko_results">Knockout Results</a>
+        {% endif %}
+        <br /><br />(<a href="{% url home_url %}">return home</a>)
+    </div>
+    
+    {% include "predictions/user_predictions_table.html" %}
+    {% include "predictions/user_ko_predictions_table.html" %}
+{% else %}
+    <div class="err_box">
+       {{ user_with_predictions.first_name }} {{ user_with_predictions.last_name }}
+        has not yet entered any predictions. 
+    </div>
+{% endif %}
+
+{% endblock %}
